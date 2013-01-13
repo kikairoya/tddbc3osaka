@@ -35,11 +35,19 @@ namespace AutoVendor {
       saleAmount += stock.price;
     }  }
 
-  unsigned int Vendor::payback() {
-    const unsigned int change = getTotalAmount();
+  void Vendor::refund(){
+    paybackAmount +=  getTotalAmount();
     totalAmount = 0u;
-    return change;
   }
+  
+  unsigned int Vendor::getChangeAmount(){
+    return paybackAmount;
+  }
+
+  void Vendor::clearChange(){
+    paybackAmount = 0;
+  }
+  
 
   bool Vendor::getPurchasable() const {
     return stock.price <= getTotalAmount()

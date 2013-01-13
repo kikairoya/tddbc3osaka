@@ -118,18 +118,24 @@ TEST_F(VendorTest, emptyStock) {
 // vendor.payback
 TEST_F(VendorTest, payback) {
   vendor.input(Money::ThousandYenBill);
-  EXPECT_EQ(1000u, vendor.payback());
+  vendor.refund();
+  EXPECT_EQ(1000u, vendor.getChangeAmount());
+  vendor.clearChange();
   ASSERT_EQ(0u, vendor.getTotalAmount());
 
   vendor.input(Money::FiveHundredYenCoin);
   vendor.purchase();
-  EXPECT_EQ(380u, vendor.payback());
+  vendor.refund();
+  EXPECT_EQ(380u, vendor.getChangeAmount());
+  vendor.clearChange();
   EXPECT_EQ(0u, vendor.getTotalAmount());
 }
 
 TEST_F(VendorTest, paybackIllegalCoin) {
   vendor.input(static_cast<Money>(1));
-  EXPECT_EQ(1u, vendor.payback());
+  vendor.refund();
+  EXPECT_EQ(1u, vendor.getChangeAmount());
+  vendor.clearChange();
 }
 
 // vendor.getStockInfomation

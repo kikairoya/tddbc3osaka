@@ -31,7 +31,11 @@ namespace AutoVendor {
     void input(const Money);
     void store(const Item&);
     void purchase();
-    unsigned int payback();
+
+    void refund();
+    unsigned int getChangeAmount();
+    void clearChange();
+    
     const std::string getStockInfomation() const;
     bool getPurchasable() const;
     unsigned int getTotalAmount() const;
