@@ -5,8 +5,7 @@ namespace std { class type_info; }
 
 namespace AutoVendor {
 
-  Vendor::Vendor() : totalAmount(0u), paybackAmount(0u), saleAmount(0u) {
-      store(initialStock);
+  Vendor::Vendor() : totalAmount(0u), paybackAmount(0u), saleAmount(0u), stock(initialStock) {
   }
 
   void Vendor::input(const Money money) {
@@ -26,21 +25,16 @@ namespace AutoVendor {
   }
 
   void Vendor::store(const Item& item) {
-    auto it = stock.lower_bound(item.name);
-    if (it == stock.end() || it->first != item.name) {
-      stock.insert(it, std::make_pair(item.name, item));
-    }
-    else {
-      it->second.number += item.number;
-    }
+    stock.insert(item);
   }
 
   void Vendor::purchase() {
-    if (getPurchasableAny()) {
-      auto item = stock.begin()->second;
-      item.number -= 1u;
-      totalAmount -= item.getPrice();
-      saleAmount += item.getPrice();
+    auto ite = rng::find_if(stock, [this](const Item &item) { return item.getPrice() <= getTotalAmount(); });
+    if (ite != stock.end()) {
+      auto i = *ite;
+      stock.erase(ite);
+      totalAmount -= i.getPrice();
+      saleAmount += i.getPrice();
     }
   }
 
@@ -59,15 +53,13 @@ namespace AutoVendor {
 
 
   bool Vendor::getPurchasableAny() const {
-    typedef decltype(*stock.begin()) value_type;
-    return std::any_of(stock.begin(), stock.end(), [this](const value_type &pair){
-              return pair.second.getPrice() <= getTotalAmount() && pair.second.number > 0u;
-        });
+    return std::any_of(stock.begin(), stock.end(), [this](const Item &item){
+      return item.getPrice() <= getTotalAmount();
+    });
   }
 
-  const std::vector<Item> Vendor::getStockInfomation() const {
-    auto v = rng::values(stock);
-    return std::vector<Item>(v.begin(), v.end());
+  const std::multiset<Item> Vendor::getStockInfomation() const {
+    return stock;
   }
 
   unsigned int Vendor::getTotalAmount() const {

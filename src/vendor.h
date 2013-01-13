@@ -5,6 +5,7 @@
 #include <vector>
 #include <exception>
 #include <map>
+#include <set>
 #include <boost/range/algorithm.hpp>
 #include <boost/range/adaptors.hpp>
 #include <boost/operators.hpp>
@@ -43,14 +44,18 @@ namespace AutoVendor {
     throw invalid_drinkname(d);
   }
   struct Item: boost::equality_comparable<Item, boost::less_than_comparable<Item> > {
-    Item(DrinkName name, unsigned int number): name(name), number(number) { }
-    DrinkName name;
-    unsigned int number;
+    Item(DrinkName name): name(name) {
+      switch (name) {
+      case DrinkName::Coke:
+        return;
+      }
+      throw invalid_drinkname(name);
+    }
     friend bool operator ==(const Item &x, const Item &y) {
-      return x.name == y.name && x.number == y.number;
+      return x.name == y.name;
     }
     friend bool operator <(const Item &x, const Item &y) {
-      return x.name < y.name || x.number < y.number;
+      return x.name < y.name;
     }
     unsigned getPrice() const {
       switch (name) {
@@ -59,22 +64,18 @@ namespace AutoVendor {
       }
       throw invalid_drinkname(name);
     }
+    DrinkName getName() const { return name; }
+  private:
+    DrinkName name;
   };
 
-  inline std::string to_string(const Item &item) {
-    std::stringstream ss;
-    ss << "名前:" << to_string(item.name) << ", 在庫:" << item.number
-       << ", 価格:" << item.getPrice();
-    return ss.str();
-  }
-
-  static const Item initialStock {DrinkName::Coke, 5u};
+  static const std::multiset<Item> initialStock{{DrinkName::Coke}, {DrinkName::Coke}, {DrinkName::Coke}, {DrinkName::Coke}, {DrinkName::Coke}};
 
   class Vendor {
     unsigned int totalAmount;
     unsigned int paybackAmount;
     unsigned int saleAmount;
-    std::map<DrinkName, Item> stock;
+    std::multiset<Item> stock;
 
   public:
     Vendor();
@@ -86,7 +87,7 @@ namespace AutoVendor {
     unsigned int getChangeAmount();
     void clearChange();
 
-    const std::vector<Item> getStockInfomation() const;
+    const std::multiset<Item> getStockInfomation() const;
     bool getPurchasableAny() const;
     unsigned int getTotalAmount() const;
     unsigned int getSaleAmount() const;
