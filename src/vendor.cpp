@@ -1,14 +1,27 @@
+namespace std { class type_info; }
 #include "vendor.h"
 #include <sstream>
 
 namespace AutoVendor {
 
-  Vendor::Vendor() : totalAmount(0u), saleAmount(0u) {
+  Vendor::Vendor() : totalAmount(0u), paybackAmount(0u), saleAmount(0u) {
       store(initialStock);
   }
 
   void Vendor::input(const Money money) {
-    totalAmount += static_cast<unsigned int>(money);
+    switch(money){
+    case Money::TenYenCoin:
+    case Money::FiftyYenCoin:
+    case Money::HundredYenCoin:
+    case Money::FiveHundredYenCoin:
+    case Money::ThousandYenBill:
+      totalAmount += static_cast<unsigned int>(money);
+      break;
+    default:
+      paybackAmount += static_cast<unsigned int>(money);
+      break;
+    }
+    
   }
 
   void Vendor::store(const Item& item) {
@@ -20,8 +33,7 @@ namespace AutoVendor {
       stock.number -= 1u;
       totalAmount -= stock.price;
       saleAmount += stock.price;
-    }
-  }
+    }  }
 
   unsigned int Vendor::payback() {
     const unsigned int change = getTotalAmount();

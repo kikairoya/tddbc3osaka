@@ -6,8 +6,8 @@ namespace AutoVendor {
 
   enum class Money : unsigned int {
     ThousandYenBill = 1000u,
-    FiveHundoredYenCoin = 500u,
-    HundoredYenCoin = 100u,
+    FiveHundredYenCoin = 500u,
+    HundredYenCoin = 100u,
     FiftyYenCoin = 50u,
     TenYenCoin = 10u
   };
@@ -22,6 +22,7 @@ namespace AutoVendor {
 
   class Vendor {
     unsigned int totalAmount;
+    unsigned int paybackAmount;
     unsigned int saleAmount;
     Item stock;
 

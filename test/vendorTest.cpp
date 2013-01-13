@@ -1,3 +1,4 @@
+namespace std { class type_info; }
 #include <gtest/gtest.h>
 #include "../src/vendor.h"
 #include <stdexcept>
@@ -23,12 +24,12 @@ TEST_F(VendorTest, Input1000YenBill) {
 }
 
 TEST_F(VendorTest, Input500YenCoin) {
-  vendor.input(Money::FiveHundoredYenCoin);
+  vendor.input(Money::FiveHundredYenCoin);
   EXPECT_EQ(500u, vendor.getTotalAmount());
 }
 
 TEST_F(VendorTest, Input100YenCoin) {
-  vendor.input(Money::HundoredYenCoin);
+  vendor.input(Money::HundredYenCoin);
   EXPECT_EQ(100u, vendor.getTotalAmount());
 }
 
@@ -42,8 +43,13 @@ TEST_F(VendorTest, Input10YenCoin) {
   EXPECT_EQ(10u, vendor.getTotalAmount());
 }
 
+TEST_F(VendorTest, InputIllegalCoin) {
+  vendor.input(static_cast<Money>(1));
+  EXPECT_EQ(0u, vendor.getTotalAmount());
+}
+
 TEST_F(VendorTest, Input) {
-  vendor.input(Money::HundoredYenCoin);
+  vendor.input(Money::HundredYenCoin);
   vendor.input(Money::TenYenCoin);
   EXPECT_EQ(110u, vendor.getTotalAmount());
 
@@ -61,7 +67,7 @@ TEST_F(VendorTest, purchase) {
 }
 
 TEST_F(VendorTest, purchaseAndGetZeroChange) {
-  vendor.input(Money::HundoredYenCoin);
+  vendor.input(Money::HundredYenCoin);
   vendor.input(Money::TenYenCoin);
   vendor.input(Money::TenYenCoin);
 
@@ -73,7 +79,7 @@ TEST_F(VendorTest, purchaseAndGetZeroChange) {
 }
 
 TEST_F(VendorTest, notPurchase) {
-  vendor.input(Money::HundoredYenCoin);
+  vendor.input(Money::HundredYenCoin);
 
   ASSERT_FALSE(vendor.getPurchasable());
   vendor.purchase();
@@ -115,10 +121,15 @@ TEST_F(VendorTest, payback) {
   EXPECT_EQ(1000u, vendor.payback());
   ASSERT_EQ(0u, vendor.getTotalAmount());
 
-  vendor.input(Money::FiveHundoredYenCoin);
+  vendor.input(Money::FiveHundredYenCoin);
   vendor.purchase();
   EXPECT_EQ(380u, vendor.payback());
   EXPECT_EQ(0u, vendor.getTotalAmount());
+}
+
+TEST_F(VendorTest, paybackIllegalCoin) {
+  vendor.input(static_cast<Money>(1));
+  EXPECT_EQ(1u, vendor.payback());
 }
 
 // vendor.getStockInfomation

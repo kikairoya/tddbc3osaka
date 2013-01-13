@@ -1,11 +1,13 @@
-GTEST_DIR = ./gtest
+GTEST_DIR = /home/alice/src-code/gtest-1.6.0
 USER_DIR = ./
-CPPFLAGS += -I$(GTEST_DIR)/include -std=c++11
+#CPPFLAGS += -I$(GTEST_DIR)/include -std=c++11
+CPPFLAGS += -I$(GTEST_DIR)/include -std=c++0x
 CXXFLAGS += -g -Wall -Wextra
 TESTS = vendor_test
 GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h $(GTEST_DIR)/include/gtest/internal/*.h
-CXX=g++-4.7
-
+#CXX=g++-4.7
+#CXX=clang++
+CXX=g++
 
 all : $(TESTS)
 
