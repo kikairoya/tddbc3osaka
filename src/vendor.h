@@ -7,6 +7,7 @@
 #include <map>
 #include <boost/range/algorithm.hpp>
 #include <boost/range/adaptors.hpp>
+#include <boost/operators.hpp>
 
 namespace AutoVendor {
 
@@ -41,15 +42,16 @@ namespace AutoVendor {
     }
     throw invalid_drinkname(d);
   }
-  struct Item {
+  struct Item: boost::equality_comparable<Item, boost::less_than_comparable<Item> > {
+    Item(DrinkName name, unsigned int number, unsigned int price): name(name), number(number), price(price) { }
     DrinkName name;
     unsigned int number;
     unsigned int price;
     friend bool operator ==(const Item &x, const Item &y) {
       return x.name == y.name && x.number == y.number && x.price == y.price;
     }
-    friend bool operator !=(const Item &x, const Item &y) {
-      return !( x == y );
+    friend bool operator <(const Item &x, const Item &y) {
+      return x.name < y.name || x.number < y.number || x.price < y.price;
     }
   };
 
@@ -60,7 +62,7 @@ namespace AutoVendor {
     return ss.str();
   }
 
-  static const Item initialStock = {DrinkName::Coke, 5u, 120u};
+  static const Item initialStock {DrinkName::Coke, 5u, 120u};
 
   class Vendor {
     unsigned int totalAmount;

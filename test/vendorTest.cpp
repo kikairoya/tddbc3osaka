@@ -167,6 +167,10 @@ TEST(vendor_item, itemToString) {
   EXPECT_EQ("名前:Coke, 在庫:5, 価格:120", to_string(Item { DrinkName::Coke, 5, 120 }));
 }
 
+TEST(vendor_item, comparable) {
+  ASSERT_LT((Item { DrinkName::Coke, 0, 120 }), (Item { DrinkName::Coke, 1, 120 }));
+}
+
 // vendor.store
 TEST_F(VendorTest, store) {
   typedef std::vector<Item> si;
