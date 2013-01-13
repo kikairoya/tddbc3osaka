@@ -39,8 +39,8 @@ namespace AutoVendor {
     if (getPurchasableAny()) {
       auto item = stock.begin()->second;
       item.number -= 1u;
-      totalAmount -= item.price;
-      saleAmount += item.price;
+      totalAmount -= item.getPrice();
+      saleAmount += item.getPrice();
     }
   }
 
@@ -61,7 +61,7 @@ namespace AutoVendor {
   bool Vendor::getPurchasableAny() const {
     typedef decltype(*stock.begin()) value_type;
     return std::any_of(stock.begin(), stock.end(), [this](const value_type &pair){
-              return pair.second.price <= getTotalAmount() && pair.second.number > 0u;
+              return pair.second.getPrice() <= getTotalAmount() && pair.second.number > 0u;
         });
   }
 

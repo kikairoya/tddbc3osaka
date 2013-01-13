@@ -43,26 +43,32 @@ namespace AutoVendor {
     throw invalid_drinkname(d);
   }
   struct Item: boost::equality_comparable<Item, boost::less_than_comparable<Item> > {
-    Item(DrinkName name, unsigned int number, unsigned int price): name(name), number(number), price(price) { }
+    Item(DrinkName name, unsigned int number): name(name), number(number) { }
     DrinkName name;
     unsigned int number;
-    unsigned int price;
     friend bool operator ==(const Item &x, const Item &y) {
-      return x.name == y.name && x.number == y.number && x.price == y.price;
+      return x.name == y.name && x.number == y.number;
     }
     friend bool operator <(const Item &x, const Item &y) {
-      return x.name < y.name || x.number < y.number || x.price < y.price;
+      return x.name < y.name || x.number < y.number;
+    }
+    unsigned getPrice() const {
+      switch (name) {
+      case DrinkName::Coke:
+        return 120;
+      }
+      throw invalid_drinkname(name);
     }
   };
 
   inline std::string to_string(const Item &item) {
     std::stringstream ss;
     ss << "名前:" << to_string(item.name) << ", 在庫:" << item.number
-       << ", 価格:" << item.price;
+       << ", 価格:" << item.getPrice();
     return ss.str();
   }
 
-  static const Item initialStock {DrinkName::Coke, 5u, 120u};
+  static const Item initialStock {DrinkName::Coke, 5u};
 
   class Vendor {
     unsigned int totalAmount;
