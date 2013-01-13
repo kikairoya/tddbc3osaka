@@ -1,6 +1,7 @@
 namespace std { class type_info; }
 #include "vendor.h"
 #include <sstream>
+#include <vector>
 
 namespace AutoVendor {
 
@@ -33,7 +34,8 @@ namespace AutoVendor {
       stock.number -= 1u;
       totalAmount -= stock.price;
       saleAmount += stock.price;
-    }  }
+    }
+  }
 
   void Vendor::refund(){
     paybackAmount +=  getTotalAmount();
@@ -54,8 +56,8 @@ namespace AutoVendor {
            && stock.number > 0u;
   }
 
-  const std::string Vendor::getStockInfomation() const {
-	  return to_string(stock);
+  const std::vector<Item> Vendor::getStockInfomation() const {
+    return { stock };
   }
 
   unsigned int Vendor::getTotalAmount() const {

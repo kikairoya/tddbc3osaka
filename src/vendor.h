@@ -2,6 +2,7 @@
 
 #include <string>
 #include <sstream>
+#include <vector>
 
 namespace AutoVendor {
 
@@ -44,7 +45,7 @@ namespace AutoVendor {
     unsigned int getChangeAmount();
     void clearChange();
 
-    const std::string getStockInfomation() const;
+    const std::vector<Item> getStockInfomation() const;
     bool getPurchasable() const;
     unsigned int getTotalAmount() const;
     unsigned int getSaleAmount() const;

@@ -2,6 +2,13 @@ namespace std { class type_info; }
 #include <gtest/gtest.h>
 #include "../src/vendor.h"
 #include <stdexcept>
+#include <boost/range/algorithm.hpp>
+#include <boost/range/adaptors.hpp>
+
+namespace rng {
+  using namespace boost::range;
+  using boost::adaptors::transformed;
+}
 
 using namespace AutoVendor;
 
@@ -141,18 +148,19 @@ TEST_F(VendorTest, paybackIllegalCoin) {
 // vendor.getStockInfomation
 TEST_F(VendorTest, getStockInfomation) {
   vendor.input(Money::ThousandYenBill);
+  typedef std::vector<std::string> sv;
 
-  EXPECT_EQ("名前:コーラ, 在庫:5, 価格:120", vendor.getStockInfomation());
+  EXPECT_EQ(sv{"名前:コーラ, 在庫:5, 価格:120"}, vendor.getStockInfomation() | rng::transformed(to_string));
 
   vendor.purchase();
-  EXPECT_EQ("名前:コーラ, 在庫:4, 価格:120", vendor.getStockInfomation());
+  EXPECT_EQ(sv{"名前:コーラ, 在庫:4, 価格:120"}, vendor.getStockInfomation() | rng::transformed(to_string));
 
   vendor.purchase();
   vendor.purchase(); vendor.purchase(); vendor.purchase();
-  EXPECT_EQ("名前:コーラ, 在庫:0, 価格:120", vendor.getStockInfomation());
+  EXPECT_EQ(sv{"名前:コーラ, 在庫:0, 価格:120"}, vendor.getStockInfomation() | rng::transformed(to_string));
 
   vendor.purchase();
-  EXPECT_EQ("名前:コーラ, 在庫:0, 価格:120", vendor.getStockInfomation());
+  EXPECT_EQ(sv{"名前:コーラ, 在庫:0, 価格:120"}, vendor.getStockInfomation() | rng::transformed(to_string));
 }
 
 TEST(vendor_item, itemToString) {
