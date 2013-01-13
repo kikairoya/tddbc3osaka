@@ -1,0 +1,1 @@
+make && ./vendor_test
