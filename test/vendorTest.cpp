@@ -167,6 +167,14 @@ TEST(vendor_item, itemToString) {
   EXPECT_EQ("名前:コーラ, 在庫:5, 価格:120", to_string(Item { "コーラ", 5, 120 }));
 }
 
+// vendor.store
+TEST_F(VendorTest, store) {
+  typedef std::vector<Item> si;
+  Item item = {"コーラ", 1u, 120u};
+  vendor.store(item);
+  EXPECT_EQ((si{Item{"コーラ", 6u, 120u}}), vendor.getStockInfomation());
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
