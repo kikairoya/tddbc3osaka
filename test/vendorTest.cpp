@@ -150,29 +150,29 @@ TEST_F(VendorTest, getStockInfomation) {
   vendor.input(Money::ThousandYenBill);
   typedef std::vector<Item> si;
 
-  EXPECT_EQ((si{Item{"コーラ", 5, 120}}), vendor.getStockInfomation());
+  EXPECT_EQ((si{Item{DrinkName::Coke, 5, 120}}), vendor.getStockInfomation());
 
   vendor.purchase();
-  EXPECT_EQ((si{Item{"コーラ", 4, 120}}), vendor.getStockInfomation());
+  EXPECT_EQ((si{Item{DrinkName::Coke, 4, 120}}), vendor.getStockInfomation());
 
   vendor.purchase();
   vendor.purchase(); vendor.purchase(); vendor.purchase();
-  EXPECT_EQ((si{Item{"コーラ", 0, 120}}), vendor.getStockInfomation());
+  EXPECT_EQ((si{Item{DrinkName::Coke, 0, 120}}), vendor.getStockInfomation());
 
   vendor.purchase();
-  EXPECT_EQ((si{Item{"コーラ", 0, 120}}), vendor.getStockInfomation());
+  EXPECT_EQ((si{Item{DrinkName::Coke, 0, 120}}), vendor.getStockInfomation());
 }
 
 TEST(vendor_item, itemToString) {
-  EXPECT_EQ("名前:コーラ, 在庫:5, 価格:120", to_string(Item { "コーラ", 5, 120 }));
+  EXPECT_EQ("名前:Coke, 在庫:5, 価格:120", to_string(Item { DrinkName::Coke, 5, 120 }));
 }
 
 // vendor.store
 TEST_F(VendorTest, store) {
   typedef std::vector<Item> si;
-  Item item = {"コーラ", 1u, 120u};
+  Item item = {DrinkName::Coke, 1u, 120u};
   vendor.store(item);
-  EXPECT_EQ((si{Item{"コーラ", 6u, 120u}}), vendor.getStockInfomation());
+  EXPECT_EQ((si{Item{DrinkName::Coke, 6u, 120u}}), vendor.getStockInfomation());
 }
 
 int main(int argc, char **argv) {

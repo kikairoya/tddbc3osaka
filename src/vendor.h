@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <exception>
 
 namespace AutoVendor {
 
@@ -14,8 +15,26 @@ namespace AutoVendor {
     TenYenCoin = 10u
   };
 
+  enum class DrinkName {
+    Coke
+  };
+  struct invalid_drinkname: std::exception {
+    invalid_drinkname(DrinkName d): msg("invalid drink name : " + std::to_string(static_cast<unsigned>(d))) { }
+    virtual ~invalid_drinkname() noexcept { }
+    std::string msg;
+    virtual const char *what() const noexcept {
+      return msg.c_str();
+    }
+  };
+  inline std::string to_string(DrinkName d) {
+    switch (d) {
+    case DrinkName::Coke:
+      return "Coke";
+    }
+    throw invalid_drinkname(d);
+  }
   struct Item {
-    std::string name;
+    DrinkName name;
     unsigned int number;
     unsigned int price;
     friend bool operator ==(const Item &x, const Item &y) {
@@ -28,12 +47,12 @@ namespace AutoVendor {
 
   inline std::string to_string(const Item &item) {
     std::stringstream ss;
-    ss << "名前:" << item.name << ", 在庫:" << item.number
+    ss << "名前:" << to_string(item.name) << ", 在庫:" << item.number
        << ", 価格:" << item.price;
     return ss.str();
   }
 
-  static const Item initialStock = {"コーラ", 5u, 120u};
+  static const Item initialStock = {DrinkName::Coke, 5u, 120u};
 
   class Vendor {
     unsigned int totalAmount;
