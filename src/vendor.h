@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <sstream>
 
 namespace AutoVendor {
 
@@ -17,6 +18,13 @@ namespace AutoVendor {
     unsigned int number;
     unsigned int price;
   };
+
+  inline std::string to_string(const Item &item) {
+    std::stringstream ss;
+    ss << "名前:" << item.name << ", 在庫:" << item.number
+       << ", 価格:" << item.price;
+    return ss.str();
+  }
 
   static const Item initialStock = {"コーラ", 5u, 120u};
 
@@ -35,7 +43,7 @@ namespace AutoVendor {
     void refund();
     unsigned int getChangeAmount();
     void clearChange();
-    
+
     const std::string getStockInfomation() const;
     bool getPurchasable() const;
     unsigned int getTotalAmount() const;

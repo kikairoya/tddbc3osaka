@@ -155,6 +155,9 @@ TEST_F(VendorTest, getStockInfomation) {
   EXPECT_EQ("名前:コーラ, 在庫:0, 価格:120", vendor.getStockInfomation());
 }
 
+TEST(vendor_item, itemToString) {
+  EXPECT_EQ("名前:コーラ, 在庫:5, 価格:120", to_string(Item { "コーラ", 5, 120 }));
+}
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);

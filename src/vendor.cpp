@@ -21,7 +21,7 @@ namespace AutoVendor {
       paybackAmount += static_cast<unsigned int>(money);
       break;
     }
-    
+
   }
 
   void Vendor::store(const Item& item) {
@@ -39,7 +39,7 @@ namespace AutoVendor {
     paybackAmount +=  getTotalAmount();
     totalAmount = 0u;
   }
-  
+
   unsigned int Vendor::getChangeAmount(){
     return paybackAmount;
   }
@@ -47,7 +47,7 @@ namespace AutoVendor {
   void Vendor::clearChange(){
     paybackAmount = 0;
   }
-  
+
 
   bool Vendor::getPurchasable() const {
     return stock.price <= getTotalAmount()
@@ -55,11 +55,7 @@ namespace AutoVendor {
   }
 
   const std::string Vendor::getStockInfomation() const {
-    std::stringstream ss;
-    ss << "名前:" << stock.name << ", 在庫:" << stock.number
-       << ", 価格:" << stock.price;
-
-    return ss.str();
+	  return to_string(stock);
   }
 
   unsigned int Vendor::getTotalAmount() const {
