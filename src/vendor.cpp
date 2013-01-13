@@ -26,14 +26,21 @@ namespace AutoVendor {
   }
 
   void Vendor::store(const Item& item) {
-    stock = item;
+    auto it = stock.lower_bound(item.name);
+    if (it == stock.end() || it->first != item.name) {
+      stock.insert(it, std::make_pair(item.name, item));
+    }
+    else {
+      it->second.number += item.number;
+    }
   }
 
   void Vendor::purchase() {
-    if (getPurchasable()) {
-      stock.number -= 1u;
-      totalAmount -= stock.price;
-      saleAmount += stock.price;
+    if (getPurchasableAny()) {
+      auto item = stock.begin()->second;
+      item.number -= 1u;
+      totalAmount -= item.price;
+      saleAmount += item.price;
     }
   }
 
@@ -51,13 +58,16 @@ namespace AutoVendor {
   }
 
 
-  bool Vendor::getPurchasable() const {
-    return stock.price <= getTotalAmount()
-           && stock.number > 0u;
+  bool Vendor::getPurchasableAny() const {
+    typedef decltype(*stock.begin()) value_type;
+    return std::any_of(stock.begin(), stock.end(), [this](const value_type &pair){
+              return pair.second.price <= getTotalAmount() && pair.second.number > 0u;
+        });
   }
 
   const std::vector<Item> Vendor::getStockInfomation() const {
-    return { stock };
+    auto v = rng::values(stock);
+    return std::vector<Item>(v.begin(), v.end());
   }
 
   unsigned int Vendor::getTotalAmount() const {

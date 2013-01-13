@@ -69,7 +69,7 @@ TEST_F(VendorTest, purchase) {
   vendor.input(Money::ThousandYenBill);
   vendor.purchase();
 
-  ASSERT_TRUE(vendor.getPurchasable());
+  ASSERT_TRUE(vendor.getPurchasableAny());
   EXPECT_EQ(880u, vendor.getTotalAmount());
 }
 
@@ -78,7 +78,7 @@ TEST_F(VendorTest, purchaseAndGetZeroChange) {
   vendor.input(Money::TenYenCoin);
   vendor.input(Money::TenYenCoin);
 
-  ASSERT_TRUE(vendor.getPurchasable());
+  ASSERT_TRUE(vendor.getPurchasableAny());
   vendor.purchase();
 
   EXPECT_EQ(0u, vendor.getTotalAmount());
@@ -88,7 +88,7 @@ TEST_F(VendorTest, purchaseAndGetZeroChange) {
 TEST_F(VendorTest, notPurchase) {
   vendor.input(Money::HundredYenCoin);
 
-  ASSERT_FALSE(vendor.getPurchasable());
+  ASSERT_FALSE(vendor.getPurchasableAny());
   vendor.purchase();
 
   EXPECT_EQ(0u, vendor.getSaleAmount());
@@ -109,14 +109,14 @@ TEST_F(VendorTest, saleAmount) {
 TEST_F(VendorTest, emptyStock) {
   vendor.input(Money::ThousandYenBill);
 
-  ASSERT_TRUE(vendor.getPurchasable());
+  ASSERT_TRUE(vendor.getPurchasableAny());
   vendor.purchase(); vendor.purchase();
   vendor.purchase(); vendor.purchase(); vendor.purchase();
 
   EXPECT_EQ(400u, vendor.getTotalAmount());
   EXPECT_EQ(600u, vendor.getSaleAmount());
 
-  ASSERT_FALSE(vendor.getPurchasable());
+  ASSERT_FALSE(vendor.getPurchasableAny());
   vendor.purchase();
   EXPECT_EQ(400u, vendor.getTotalAmount());
   EXPECT_EQ(600u, vendor.getSaleAmount());

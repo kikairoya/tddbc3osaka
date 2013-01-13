@@ -4,8 +4,16 @@
 #include <sstream>
 #include <vector>
 #include <exception>
+#include <map>
+#include <boost/range/algorithm.hpp>
+#include <boost/range/adaptors.hpp>
 
 namespace AutoVendor {
+
+  namespace rng {
+    using namespace boost::range;
+    using namespace boost::adaptors;
+  }
 
   enum class Money : unsigned int {
     ThousandYenBill = 1000u,
@@ -58,7 +66,7 @@ namespace AutoVendor {
     unsigned int totalAmount;
     unsigned int paybackAmount;
     unsigned int saleAmount;
-    Item stock;
+    std::map<DrinkName, Item> stock;
 
   public:
     Vendor();
@@ -71,7 +79,7 @@ namespace AutoVendor {
     void clearChange();
 
     const std::vector<Item> getStockInfomation() const;
-    bool getPurchasable() const;
+    bool getPurchasableAny() const;
     unsigned int getTotalAmount() const;
     unsigned int getSaleAmount() const;
   };
