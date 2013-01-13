@@ -18,6 +18,12 @@ namespace AutoVendor {
     std::string name;
     unsigned int number;
     unsigned int price;
+    friend bool operator ==(const Item &x, const Item &y) {
+      return x.name == y.name && x.number == y.number && x.price == y.price;
+    }
+    friend bool operator !=(const Item &x, const Item &y) {
+      return !( x == y );
+    }
   };
 
   inline std::string to_string(const Item &item) {

@@ -148,19 +148,19 @@ TEST_F(VendorTest, paybackIllegalCoin) {
 // vendor.getStockInfomation
 TEST_F(VendorTest, getStockInfomation) {
   vendor.input(Money::ThousandYenBill);
-  typedef std::vector<std::string> sv;
+  typedef std::vector<Item> si;
 
-  EXPECT_EQ(sv{"名前:コーラ, 在庫:5, 価格:120"}, vendor.getStockInfomation() | rng::transformed(to_string));
+  EXPECT_EQ((si{Item{"コーラ", 5, 120}}), vendor.getStockInfomation());
 
   vendor.purchase();
-  EXPECT_EQ(sv{"名前:コーラ, 在庫:4, 価格:120"}, vendor.getStockInfomation() | rng::transformed(to_string));
+  EXPECT_EQ((si{Item{"コーラ", 4, 120}}), vendor.getStockInfomation());
 
   vendor.purchase();
   vendor.purchase(); vendor.purchase(); vendor.purchase();
-  EXPECT_EQ(sv{"名前:コーラ, 在庫:0, 価格:120"}, vendor.getStockInfomation() | rng::transformed(to_string));
+  EXPECT_EQ((si{Item{"コーラ", 0, 120}}), vendor.getStockInfomation());
 
   vendor.purchase();
-  EXPECT_EQ(sv{"名前:コーラ, 在庫:0, 価格:120"}, vendor.getStockInfomation() | rng::transformed(to_string));
+  EXPECT_EQ((si{Item{"コーラ", 0, 120}}), vendor.getStockInfomation());
 }
 
 TEST(vendor_item, itemToString) {
